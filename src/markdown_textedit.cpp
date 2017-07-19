@@ -5,7 +5,9 @@
 #include <QDir>
 #include <QFileDevice>
 #include <QMessageBox>
-
+#include <QTextCursor>
+#include <QTextBlock>
+#include <QList>
 
 const int PERMISSION_MASK = QFileDevice::ReadUser | QFileDevice::WriteUser;
 
@@ -46,6 +48,34 @@ QFile* MarkdownTextEdit::file() {
 
     return mFile;
 }
+
+
+QString MarkdownTextEdit::parseCurrentBlock() const {
+
+     int begin, end;
+
+     QTextBlock currentBlock = this->textCursor().block();
+     QTextBlock firstBlock   = this->document()->firstBlock();
+     QTextBlock lastBlock    = this->document()->lastBlock();
+
+     while(currentBlock.text().count() != 0 && currentBlock != firstBlock)
+         currentBlock = currentBlock.previous();
+     begin = currentBlock.position();
+
+     currentBlock = this->textCursor().block();
+     while(currentBlock.text().count() != 0 && currentBlock != lastBlock)
+        currentBlock = currentBlock.next();
+     end = currentBlock.position();
+
+     QList<QString> listText;
+
+     while(begin != end) {
+         listText.append(this->document()->findBlockByNumber(begin++).text());
+     }
+     listText.append(this->document()->findBlockByNumber(end).text());
+
+     return listText.join("\n");
+ }
 
 void MarkdownTextEdit::save() {
     /* Save text contain in the editor to current file path.

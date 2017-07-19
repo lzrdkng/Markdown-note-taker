@@ -25,7 +25,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     highlightingRules.append(rule);
 
     boldFormat.setForeground(QColor::fromRgb(128, 64, 0));
-    rule.pattern = QRegularExpression("(?<b>[_*]){1,2}(.+)\\g<b>{1,2}"); // OK
+    rule.pattern = QRegularExpression("(?<b>[_*]){1,2}(.+?)\\g<b>{1,2}"); // OK
     rule.format  = boldFormat;
     highlightingRules.append(rule);
 

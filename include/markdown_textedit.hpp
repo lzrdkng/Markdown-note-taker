@@ -24,6 +24,8 @@ public:
     // Save text to file as
     void saveAs();
 
+    QString parseCurrentBlock() const;
+
 private:
 
     QFile*          mFile;

@@ -8,9 +8,12 @@ INCLUDEPATH += include
 
 # Input
 SOURCES += src/main.cpp \
-           src/markdown_editor.cpp \
            src/markdown_textedit.cpp \
-           src/markdown_highlighter.cpp
+           src/markdown_highlighter.cpp \
+           src/markdown_webengine.cpp \
+           src/markdown_mainwindow.cpp \
+           src/markdown_tabwidget.cpp \
+           src/markdown_document.cpp
 
 DISTFILES += \
     CHANGELOG.md \
@@ -18,16 +21,21 @@ DISTFILES += \
     LICENSE \
 
 HEADERS += \
-           include/markdown_editor.hpp \
+    include/constants.hpp \
     include/markdown_textedit.hpp \
     include/markdown_highlighter.hpp \
-    include/constants.hpp
+    include/markdown_webengine.hpp \
+    include/markdown_mainwindow.hpp \
+    include/markdown_tabwidget.hpp \
+    include/markdown_document.hpp
 
 OBJECTS_DIR += build
 MOC_DIR += build
 
 QT += widgets
 QT += core
+QT += webenginewidgets
+QT += webengine
+QT += webchannel
 
-
-LIBS += -lmarkdown
+RESOURCES += markdown.qrc \

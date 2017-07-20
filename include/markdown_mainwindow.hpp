@@ -10,8 +10,9 @@
 
 #include "markdown_highlighter.hpp"
 #include "markdown_textedit.hpp"
-
-
+#include "markdown_webengine.hpp"
+#include "markdown_tabwidget.hpp"
+#include "markdown_document.hpp"
 
 class MarkdownEditor : public QMainWindow {
 
@@ -19,7 +20,9 @@ class MarkdownEditor : public QMainWindow {
 
 public:
 
-    MarkdownEditor();
+    explicit MarkdownEditor(QWidget* parent = nullptr);
+
+
 
 protected:
 
@@ -28,30 +31,44 @@ protected:
 private:
 
     // MEMBERS
-    QTextBrowser*   mTextBrowser;
-    QSplitter*      mSplitter;
-    QStackedWidget* mStackedWidget;
-    QTabBar*        mTabBar;
+    QSplitter*           mSplitter;
+    MarkdownTabWidget*   mTabWidget;
     MarkdownHighlighter* mHighlighter;
+    MarkdownWebEngine*   mWebEngine;
+    MarkdownDocument*     mDocument;
 
-    void removeWidget(int);
+    void setupActions();
+
+    void setupConnections();
+
+    void setupUI();
+
+
+
 
 public slots:
 
     void addTab();
-    void addWidget(MarkdownTextEdit* newWidget = nullptr);
-    void closeTab(int index = -1);
-    void openFile();
-    void markdownToHtml();
-    void refreshHtml(int index = -1);
-    void refreshTabColor();
-    void saveAll();
-    void saveAs();
-    void saveCurrent();
-    void scrollHtml(int);
-    void swapWidget(int, int);
-    void updateTab(bool);
 
+    void addTab(MarkdownTextEdit* newEditor);
+
+    void closeTab(int index = -1);
+
+    void openFile();
+
+    void refreshDocument(int index = -1);
+
+    void refreshTabColor();
+
+    void saveAll();
+
+    void saveAs();
+
+    void saveCurrent();
+
+    void swapDocument(int index);
+
+    void updateTab(bool);
 };
 
 #endif // MARKDOWN_EDITOR_H

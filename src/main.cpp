@@ -5,22 +5,17 @@
 #include <QApplication>
 
 // App import
-#include "markdown_editor.hpp"
+#include "markdown_mainwindow.hpp"
 
 
 int main(int argc, char* argv[]) {
 
-    QApplication* app = new QApplication(argc, argv);
+    QApplication app(argc, argv);
 
-    MarkdownEditor* editor = new MarkdownEditor();
+    MarkdownEditor editor;
 
-    editor->showMaximized();
+    editor.showMaximized();
 
-    int returnCode =  app->exec();
-
-    delete editor;
-    delete app;
-
-    return returnCode;
+    return app.exec();
 
 }

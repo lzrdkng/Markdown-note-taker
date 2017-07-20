@@ -1,4 +1,4 @@
-#include "markdown_editor.hpp"
+#include "markdown_mainwindow.hpp"
 #include "constants.hpp"
 
 extern "C" {
@@ -24,55 +24,23 @@ extern "C" {
 #include <Qt>
 #include <QWidget>
 
-MarkdownEditor::MarkdownEditor() : QMainWindow() {
+#include <iostream>
+#include <QUrl>
+#include <QWebChannel>
 
-    // MEMBERS DECLARATION
-    mTextBrowser   = new QTextBrowser(this);
-    mSplitter      = new QSplitter(this);
-    mStackedWidget = new QStackedWidget(this);
-    mTabBar        = new QTabBar(this);
-    mHighlighter   = new MarkdownHighlighter(this);
 
-    // MEMBERS CUSTOMIZATION
+MarkdownEditor::MarkdownEditor(QWidget* parent) :
+    QMainWindow(parent) {
 
-    // Textbrowser
-    mTextBrowser->document()->setDefaultStyleSheet(Markdown::DefaultTextBrowserStyle);
-    mTextBrowser->document()->setDocumentMargin(20);
+    this->setupUI();
+    this->setupActions();
+    this->setupConnections();
+}
 
-    // Tab Bar
-    mTabBar->setMinimumWidth(128);
-    mTabBar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
-    mTabBar->setMovable(true);
-    mTabBar->setTabsClosable(true);
-    mTabBar->setDrawBase(true);
-    mTabBar->setExpanding(false);
-    mTabBar->setStyleSheet("QTabBar::tab {min-width:128px; max-width:512px;}");
 
-    if(mTabBar->count() == 0)
-        mTabBar->hide();
+// PRIVATE METHODS
 
-    // Splitter (central widget)
-    mSplitter->addWidget(mStackedWidget);
-    mSplitter->addWidget(mTextBrowser);
-    mSplitter->setSizes(QList<int>({INT_MAX, INT_MAX}));
-
-    // Dock top
-    QWidget*     dockWidget = new QWidget();
-    QPushButton* addButton  = new QPushButton("+");
-    QHBoxLayout* dockLayout = new QHBoxLayout();
-
-    addButton->setMaximumWidth(30);
-
-    dockLayout->addWidget(mTabBar, 0, Qt::AlignBottom);
-    dockLayout->addWidget(addButton, 0, Qt::AlignLeft|Qt::AlignBottom);
-    dockWidget->setLayout(dockLayout);
-
-    QDockWidget* dock = new QDockWidget(this);
-    dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
-    dock->setWidget(dockWidget);
-    dock->setFixedHeight(88);
-
-    // ACTIONS
+void MarkdownEditor::setupActions() {
 
     QAction* actionQuit = new QAction("Quit", this);
     actionQuit->setShortcut(QKeySequence::Quit);
@@ -143,44 +111,70 @@ MarkdownEditor::MarkdownEditor() : QMainWindow() {
     };
     this->addActions(actions);
 
-    // SLOTS & SIGNALS
-    QObject::connect(addButton,
-                     SIGNAL(clicked(bool)),
-                     this,
-                     SLOT(addTab()));
-    QObject::connect(mTabBar,
-                     SIGNAL(tabCloseRequested(int)),
-                     this,
-                     SLOT(closeTab(int)));
-    QObject::connect(mTabBar,
-                     SIGNAL(currentChanged(int)),
-                     this,
-                     SLOT(refreshHtml(int)));
-    QObject::connect(mTabBar,
-                     SIGNAL(tabMoved(int,int)),
-                     this,
-                     SLOT(swapWidget(int,int)));
-
-
-    // MENU BAR
     QMenu* fileMenu = new QMenu("&File", this);
     fileMenu->addActions(actions);
     this->menuBar()->addMenu(fileMenu);
 
-    // ROOT CONFIGURATIONS
+}
 
-    // Layout
+void MarkdownEditor::setupConnections() {
+
+    QObject::connect(mTabWidget->tabBar(),
+                     SIGNAL(tabCloseRequested(int)),
+                     this,
+                     SLOT(closeTab(int)));
+    QObject::connect(mTabWidget->tabBar(),
+                     SIGNAL(currentChanged(int)),
+                     this,
+                     SLOT(swapDocument(int)));
+
+    QWebChannel* channel = new QWebChannel(this);
+    channel->registerObject(QStringLiteral("content"), mDocument);
+    mWebEngine->page()->setWebChannel(channel);
+}
+
+
+void MarkdownEditor::setupUI() {
+
+    mSplitter      = new QSplitter(this);
+    mTabWidget     = new MarkdownTabWidget(this);
+    mHighlighter   = new MarkdownHighlighter(this);
+    mWebEngine     = new MarkdownWebEngine(this);
+    mDocument      = new MarkdownDocument((QObject*)this);
+
+    mWebEngine->setUrl(QUrl("qrc:///html/index.html"));
+
+    mSplitter->addWidget(mTabWidget->stack());
+    mSplitter->addWidget(mWebEngine);
+    mSplitter->setSizes(QList<int>({INT_MAX, INT_MAX}));
+
+    QWidget*     dockWidget = new QWidget();
+    QPushButton* addButton  = new QPushButton("+");
+    QObject::connect(addButton,
+                     SIGNAL(clicked()),
+                     this,
+                     SLOT(addTab()));
+    QHBoxLayout* dockLayout = new QHBoxLayout();
+
+    addButton->setMaximumWidth(30);
+
+    dockLayout->addWidget(mTabWidget->tabBar(), 0, Qt::AlignBottom);
+    dockLayout->addWidget(addButton, 0, Qt::AlignLeft|Qt::AlignBottom);
+    dockWidget->setLayout(dockLayout);
+
+    QDockWidget* dock = new QDockWidget(this);
+    dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    dock->setWidget(dockWidget);
+    dock->setFixedHeight(88);
+
     this->addDockWidget(Qt::TopDockWidgetArea, dock, Qt::Horizontal);
     this->setCentralWidget(mSplitter);
 
-    // Geometry and misc
     this->resize(1200, 400);
     this->setWindowTitle("~Lizard~");
 }
 
-// PUBLIC METHODS
-
-// PRIVATE METHODS
+// PROTECTED METHODS
 
 void MarkdownEditor::closeEvent(QCloseEvent *event) {
     /* Catch close event of main window.
@@ -192,7 +186,7 @@ void MarkdownEditor::closeEvent(QCloseEvent *event) {
      * If Cancel selected, ignore the event.
      * If Discard selected, accept the event.
      */
-
+/*
     QList<QString> unsavedFiles;
     MarkdownTextEdit* ptr;
 
@@ -234,77 +228,44 @@ void MarkdownEditor::closeEvent(QCloseEvent *event) {
         default:
             event->accept();
         }
-    }
+    }*/
+    event->accept();
 
-}
-
-// PRIVATE METHODS
-
-void MarkdownEditor::removeWidget(int index) {
-    /* Remove widget at position index in stack */
-
-    MarkdownTextEdit* widget = (MarkdownTextEdit*)mStackedWidget->widget(index);
-
-    if(widget == nullptr)
-        /* This error is not suppose to occur except if someone pass an invalid
-         * index in parameter. If however this error occurs, please make sure
-         * that the index pass in argument is a valid index in the stacked
-         * widget. */
-        QMessageBox::critical(this,
-                              "Lizard - NULL POINTER EXCEPTION",
-                              "A nullptr has been detected in private method "
-                              "'MarkdownEditor::removeWidget'. Please, report this incident!");
-    else {
-        mStackedWidget->removeWidget(widget);
-        delete widget;
-    }
 }
 
 // PUBLIC SLOTS
 
 void MarkdownEditor::addTab() {
+    this->addTab(nullptr);
+}
+
+void MarkdownEditor::addTab(MarkdownTextEdit* newEditor) {
     /* Add an empty tab in mTabBar.
      * Add a new widget to the stack. */
 
-    int index = mTabBar->addTab("new file");
+    if(newEditor == nullptr)
+        newEditor = new MarkdownTextEdit(nullptr);
 
-    this->addWidget();
 
-    mTabBar->setCurrentIndex(index); // Triggered currentChanged signal
-}
-
-void MarkdownEditor::addWidget(MarkdownTextEdit* newWidget) {
-    /* Add a widget at end of the stack */
-
-    if(newWidget == nullptr)
-        newWidget = new MarkdownTextEdit(NULL);
-
-    mStackedWidget->addWidget(newWidget); // mStackedWidget take ownership of newWidget
-
-    // SIGNALS AND SLOTS CONNECTION
-    QObject::connect(newWidget->verticalScrollBar(),
-                     SIGNAL(valueChanged(int)),
-                     this,
-                     SLOT(scrollHtml(int)));
-    QObject::connect(newWidget,
-                     SIGNAL(textChanged()),
-                     this,
-                     SLOT(markdownToHtml()));
-    QObject::connect(newWidget,
+    QObject::connect(newEditor,
                      SIGNAL(signal_save(bool)),
                      this,
                      SLOT(updateTab(bool)));
+    QObject::connect(newEditor,
+                     SIGNAL(textChanged()),
+                     this,
+                     SLOT(refreshDocument()));
 
-    mHighlighter->setDocument(newWidget->document());
+    mTabWidget->addWidget(newEditor, "new file");
 }
 
 void MarkdownEditor::closeTab(int index) {
     /* Close tab at index */
 
     if(index == -1) // Action triggered
-        index = mTabBar->currentIndex(); // Will close the current tab
+        index = mTabWidget->tabBar()->currentIndex(); // Will close the current tab
 
-    MarkdownTextEdit* tab = (MarkdownTextEdit*)mStackedWidget->widget(index);
+    MarkdownTextEdit* tab = (MarkdownTextEdit*)mTabWidget->stack()->widget(index);
 
     if(tab != nullptr) {
         // Check if the current tab save state
@@ -313,7 +274,7 @@ void MarkdownEditor::closeTab(int index) {
             reply->setDefaultButton(QMessageBox::Save);
             reply->setEscapeButton(QMessageBox::Cancel);
             reply->setIcon(QMessageBox::Question);
-            reply->setInformativeText(mTabBar->tabText(index));
+            reply->setInformativeText(mTabWidget->tabBar()->tabText(index));
             reply->setStandardButtons(QMessageBox::Discard |
                                       QMessageBox::Cancel  |
                                       QMessageBox::Save);
@@ -337,9 +298,7 @@ void MarkdownEditor::closeTab(int index) {
                 break;
             }
         }
-
-        this->removeWidget(index);
-        mTabBar->removeTab(index);
+        mTabWidget->removeTab(index);
     }
 }
 
@@ -353,53 +312,39 @@ void MarkdownEditor::openFile() {
                                                     QDir::homePath());
     if(!fileName.isEmpty()) {
 
-        MarkdownTextEdit* newWidget = new MarkdownTextEdit(fileName);
+        MarkdownTextEdit* newEditor = new MarkdownTextEdit(fileName);
 
-        int index = mTabBar->addTab(fileName);
-
-        this->addWidget(newWidget);
-
-        mTabBar->setCurrentIndex(index);
+        this->addTab(newEditor);
     }
 }
 
-void MarkdownEditor::refreshHtml(int index) {
-    /* Refresh the text in the TextBrowser depending
-     * on the widget at position index in stack */
+void MarkdownEditor::refreshDocument(int index) {
 
-    // If no editor open, hide the tab bar
-    if(index == -1) {
-        mTabBar->hide();
+    if(index == -1) // triggered by textChanged of current editor
+        index = mTabWidget->tabBar()->currentIndex();
+
+    MarkdownTextEdit* currentEditor = (MarkdownTextEdit*)mTabWidget->stack()->widget(index);
+
+    if(currentEditor != nullptr) {
+        mDocument->setText(currentEditor->toPlainText());
+        this->refreshTabColor();
     }
-    else {
-        mTabBar->show();
-
-        mStackedWidget->setCurrentIndex(index);
-
-        MarkdownTextEdit* current = (MarkdownTextEdit*)mStackedWidget->currentWidget();
-
-        // Switch the document of the highlighter before assigning new text
-        if(current == nullptr)
-            mHighlighter->setDocument(nullptr);
-        else
-            mHighlighter->setDocument(current->document());
-    }
-
-    this->markdownToHtml();
+    else
+        mDocument->setText("");
 }
 
 void MarkdownEditor::refreshTabColor() {
     /* Refresh the text color of the current tab in the tab bar */
 
-    int index = mTabBar->currentIndex();
+    int index = mTabWidget->tabBar()->currentIndex();
 
-    MarkdownTextEdit* currentTab = (MarkdownTextEdit*)mStackedWidget->currentWidget();
+    MarkdownTextEdit* currentTab = (MarkdownTextEdit*)mTabWidget->stack()->currentWidget();
 
     if(currentTab != nullptr) {
         if(!currentTab->isSave())
-            mTabBar->setTabTextColor(index, QColor::fromRgb(255, 0, 0)); // Red color if needs to be save
+            mTabWidget->tabBar()->setTabTextColor(index, QColor::fromRgb(255, 0, 0)); // Red color if needs to be save
         else
-            mTabBar->setTabTextColor(index, QColor::fromRgb(0, 0, 0));   // Otherwise, black color
+            mTabWidget->tabBar()->setTabTextColor(index, QColor::fromRgb(0, 0, 0));   // Otherwise, black color
     }
 }
 
@@ -407,9 +352,10 @@ void MarkdownEditor::saveAll() {
     /* Save all files */
 
     MarkdownTextEdit* ptr;
+    QStackedWidget* stack = mTabWidget->stack();
 
-    for(int i=0;i<mStackedWidget->count();++i) {
-        ptr = (MarkdownTextEdit*)mStackedWidget->widget(i);
+    for(int i=0;i<stack->count();++i) {
+        ptr = (MarkdownTextEdit*)stack->widget(i);
         ptr->save();
     }
 }
@@ -417,7 +363,7 @@ void MarkdownEditor::saveAll() {
 void MarkdownEditor::saveAs() {
     /* Call saveAs method of the current widget in the stack */
 
-    MarkdownTextEdit* current = (MarkdownTextEdit*)mStackedWidget->currentWidget();
+    MarkdownTextEdit* current = (MarkdownTextEdit*)mTabWidget->stack()->currentWidget();
 
     if(current != nullptr)
         current->saveAs();
@@ -426,130 +372,21 @@ void MarkdownEditor::saveAs() {
 void MarkdownEditor::saveCurrent() {
     /* Call save method of the current widget in stack */
 
-    MarkdownTextEdit* current_tab = (MarkdownTextEdit*)mStackedWidget->currentWidget();
+    MarkdownTextEdit* current_tab = (MarkdownTextEdit*)mTabWidget->stack()->currentWidget();
 
     if(current_tab != nullptr)
         current_tab->save();
 }
 
-void MarkdownEditor::scrollHtml(int markdownPos) {
-    /* Synchronize the TextBrowser vertical scrollbar with the
-     * current widget in the stack, by applying a ratio rule. */
+void MarkdownEditor::swapDocument(int index) {
 
-    MarkdownTextEdit* currentWidget = (MarkdownTextEdit*)mStackedWidget->currentWidget();
-
-    if(currentWidget != nullptr) {
-
-        int markdownMax = currentWidget->verticalScrollBar()->maximum();
-
-        if(markdownMax == 0)
-            mTextBrowser->verticalScrollBar()->setValue(0);
-        else {
-            int htmlMax  = mTextBrowser->verticalScrollBar()->maximum();
-            double ratio = htmlMax/(double)markdownMax;
-
-            mTextBrowser->verticalScrollBar()->setValue(markdownPos * ratio);
-        }
-    }
-}
-
-void MarkdownEditor::swapWidget(int i, int j) {
-    /* Swap widget at position i with widget at position j in stack */
-
-    MarkdownTextEdit* a = (MarkdownTextEdit*)mStackedWidget->widget(i);
-    MarkdownTextEdit* b = (MarkdownTextEdit*)mStackedWidget->widget(j);
-
-    if(a == nullptr || b == nullptr)
-        /* The swapWidget slot is connected to the tabMoved signal of TabBar.
-         * This error will appear only if the stack is not correctly
-         * synchronize with the TabBar. i.e that all call to
-         * [addTab, removeTab, insertTab] must somehow be related
-         * to the corresponding method of the stack. */
-        QMessageBox::critical(this,
-                              "Lizard - NULL POINTER EXCEPTION",
-                              "A nullptr has been detected in slot "
-                              "'MarkdownEditor::swapWidget'. Please, report this incident!");
-
-    mStackedWidget->removeWidget(a);
-    mStackedWidget->insertWidget(j, a);
-
-    mStackedWidget->removeWidget(b);
-    mStackedWidget->insertWidget(i, b);
-
-}
-
-void MarkdownEditor::markdownToHtml() {
-    /* Translate the markdown expression in the current widget in stack
-     * to html and put it in the text browser.
-     * http://www.pell.portland.or.us/~orc/Code/discount/ */
-
-    MarkdownTextEdit* current = (MarkdownTextEdit*)mStackedWidget->currentWidget();
-
-    if(current == nullptr) {
-        mTextBrowser->setText("");
-    }
+    if(index == -1)
+        mHighlighter->setDocument(nullptr);
     else {
-        /* To translate the mardown to html, I use the markdown discout lib.
-         * Because it's a C lib, C data type are use.
-         *
-         * The following steps are made to translate the markdown to html.
-         *
-         * 1. Fetch the text
-         * 2. Convert the text to C standard char pointer and keep its size
-         * 3. Create a MMIOT pointer from the text and its size
-         * 4. Open a temporary file
-         * 5. Store the html into the temporary file from the MMIOT document
-         * 6. Rewin the temporary file and recreate a QString from it */
-
-        std::string text   = current->toPlainText().toStdString(); // Fetch text in the text editor
-        const char* text_c = text.c_str(); // Store it in a C char pointer
-        int size = text.size(); // Store its size as well
-        MMIOT* doc = mkd_string(text_c, // Create a MMIOT document pointer from the text and its size
-                                size,
-                                MKD_NOSTYLE    |
-                                MKD_NOLINKS    |
-                                MKD_NOIMAGE    |
-                                MKD_NOHEADER   |
-                                MKD_NODIVQUOTE |
-                                MKD_FENCEDCODE);
-
-        FILE* out = tmpfile();
-
-        if(out != NULL) {
-            QString str;
-            char buffer[256];
-
-            // Will free MMIOT document
-            markdown(doc,
-                     out,
-                     MKD_NOSTYLE    |
-                     MKD_NOLINKS    |
-                     MKD_NOIMAGE    |
-                     MKD_NOHEADER   |
-                     MKD_NODIVQUOTE |
-                     MKD_FENCEDCODE);
-            rewind(out);
-
-            // PERHAP A BETTER TO DO THIS
-            while(!feof(out)) {
-                if(fgets(buffer, 256, out) == NULL)
-                    break;
-                str.append(QString::fromLocal8Bit(buffer));
-            }
-
-            mTextBrowser->setText(str);
-        }
-        else {
-            /* If the system failed to create a temporary file, we need to
-             * free the MMIOT document from memory. This function is however
-             * called if the file is open */
-            mkd_cleanup(doc);
-        }
-        fclose(out);
-
-        this->scrollHtml(current->verticalScrollBar()->value());
-        this->refreshTabColor();
+        MarkdownTextEdit* currentEditor = (MarkdownTextEdit*)mTabWidget->stack()->widget(index);
+        mHighlighter->setDocument(currentEditor->document());
     }
+
 }
 
 void MarkdownEditor::updateTab(bool saveSuccess) {
@@ -561,10 +398,10 @@ void MarkdownEditor::updateTab(bool saveSuccess) {
                              tr("Lizard failed to save your file!"));
     else {
 
-        MarkdownTextEdit* currentTab = (MarkdownTextEdit*)mStackedWidget->currentWidget();
+        MarkdownTextEdit* currentTab = (MarkdownTextEdit*)mTabWidget->stack()->currentWidget();
 
         if(currentTab != nullptr)
-            mTabBar->setTabText(mTabBar->currentIndex(), currentTab->file()->fileName());
+            mTabWidget->tabBar()->setTabText(mTabWidget->tabBar()->currentIndex(), currentTab->file()->fileName());
     }
 
     this->refreshTabColor();

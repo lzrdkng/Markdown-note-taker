@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QPlainTextEdit>
+#include <QList>
 
 class MarkdownTextEdit : public QPlainTextEdit {
 
@@ -24,10 +25,9 @@ public:
     // Save text to file as
     void saveAs();
 
-    QString parseCurrentBlock() const;
-
 private:
 
+    int             mCurrentblock;
     QFile*          mFile;
     unsigned int    mHashedText;
 

@@ -11,18 +11,38 @@
   <script>
   'use strict';
 
+  marked.setOptions({
+    breaks: true
+  });
+
   var placeholder = document.getElementById('placeholder');
+  
+  var max = 0; // Maximum text editor scroll value
 
-
-  var updateText = function(text) {
-      placeholder.innerHTML = marked(text);
+  var markdownToHtml = function(text) {placeholder.innerHTML = marked(text);}
+  
+  var scrollHtml = function(value) {
+    /* Synchronize the browser scroll value with the text editor */
+    if( window.max === 0 ) {window.scrollTo(0, 0);}
+    else {
+      var ratio = document.body.scrollHeight / window.max;
+      window.scrollTo(0, ratio * value);  
+    }
   }
-
+  
+  var rangeChanged = function(min, max) {window.max = max;}
+  
   new QWebChannel(qt.webChannelTransport,
     function(channel) {
+      
       var content = channel.objects.content;
-      updateText(content.text);
-      content.textChanged.connect(updateText);
+      markdownToHtml(content.text);
+      content.textChanged.connect(markdownToHtml);
+      
+      var scrollBar = channel.objects.scrollBar;
+      scrollHtml(scrollBar.value);
+      scrollBar.valueChanged.connect(scrollHtml);
+      scrollBar.rangeChanged.connect(rangeChanged);
     }
   );
   </script>

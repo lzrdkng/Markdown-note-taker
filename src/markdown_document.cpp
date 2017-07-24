@@ -1,5 +1,4 @@
 #include "markdown_document.hpp"
-#include <iostream>
 
 void MarkdownDocument::setText(const QString &text) {
 

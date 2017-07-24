@@ -19,5 +19,6 @@ The current **Makefile** doesn't have an install command yet. Simply call **make
 
 ## Versions
 
+- 24/07/2017: **1.2.0**
 - 20/07/2017: **1.1.0**
 - 18/07/2017 : **1.0.0**

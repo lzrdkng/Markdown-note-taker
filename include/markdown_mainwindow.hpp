@@ -3,14 +3,12 @@
 
 #include <QMainWindow>
 #include <QSplitter>
-#include <QStackedWidget>
-#include <QTabBar>
-#include <QTextBrowser>
+#include <QPlainTextEdit>
+#include <QWebEngineView>
 #include <QCloseEvent>
 
 #include "markdown_highlighter.hpp"
 #include "markdown_textedit.hpp"
-#include "markdown_webengine.hpp"
 #include "markdown_tabwidget.hpp"
 #include "markdown_document.hpp"
 
@@ -32,12 +30,13 @@ private:
 
     // MEMBERS
     QSplitter*           mSplitter;
+    QPlainTextEdit*      mTextEdit;
     MarkdownTabWidget*   mTabWidget;
     MarkdownHighlighter* mHighlighter;
-    MarkdownWebEngine*   mWebEngine;
-    MarkdownDocument*     mDocument;
+    QWebEngineView*      mWebEngine;
+    MarkdownDocument*    mDocument;
 
-    void setupActions();
+    void createMenus();
 
     void setupConnections();
 
@@ -46,7 +45,7 @@ private:
 
 
 
-public slots:
+private slots:
 
     void addTab();
 
@@ -54,11 +53,11 @@ public slots:
 
     void closeTab(int index = -1);
 
+    void exportAsPDF();
+
     void openFile();
 
-    void refreshDocument(int index = -1);
-
-    void refreshTabColor();
+    void refreshDocument();
 
     void saveAll();
 

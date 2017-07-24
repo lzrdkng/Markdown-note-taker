@@ -1,0 +1,43 @@
+QMainWindow {
+    background: #404244; 
+}
+QMainWindow::separator {
+    height: 0px;
+}
+
+QMenuBar {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 lightgray, stop:1 darkgray);
+}
+QMenuBar::item:selected {
+    background: #616161;
+}
+
+QMenu {
+    background: #2E2F30;
+    color:white;
+}
+QMenu::item:selected {
+    background: #222222;
+}
+QMenu::separator {
+    background: #404244;
+    margin: 5px;
+}
+
+QTabBar::tab {min-width:128px; max-width:512px;}
+
+QPushButton#addButton {
+    padding: 5px 10px;
+}
+
+QPlainTextEdit {
+    background:#2E2F30;
+    color:gray;
+}
+
+QScrollBar:vertical {
+    background: #4A4B4D;
+}
+
+

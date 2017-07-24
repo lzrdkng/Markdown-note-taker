@@ -1,13 +1,6 @@
 #include "markdown_mainwindow.hpp"
-#include "constants.hpp"
-
-extern "C" {
-#include <stdio.h>
-#include <mkdio.h>
-}
 
 #include <QAction>
-#include <QColor>
 #include <QDir>
 #include <QDockWidget>
 #include <QFileDialog>
@@ -23,24 +16,24 @@ extern "C" {
 #include <QSizePolicy>
 #include <Qt>
 #include <QWidget>
-
-#include <iostream>
 #include <QUrl>
 #include <QWebChannel>
+
+
 
 
 MarkdownEditor::MarkdownEditor(QWidget* parent) :
     QMainWindow(parent) {
 
     this->setupUI();
-    this->setupActions();
+    this->createMenus();
     this->setupConnections();
 }
 
 
 // PRIVATE METHODS
 
-void MarkdownEditor::setupActions() {
+void MarkdownEditor::createMenus() {
 
     QAction* actionQuit = new QAction("Quit", this);
     actionQuit->setShortcut(QKeySequence::Quit);
@@ -91,21 +84,31 @@ void MarkdownEditor::setupActions() {
                      this,
                      SLOT(saveAs()));
 
+    QAction* actionExportPDF = new QAction("Export As PDF", this);
+    QObject::connect(actionExportPDF,
+                     SIGNAL(triggered(bool)),
+                     this,
+                     SLOT(exportAsPDF()));
+
     // Seperator action
-    QAction* actionSeparator1 = new QAction(this);
-    QAction* actionSeparator2 = new QAction(this);
-    actionSeparator1->setSeparator(true);
-    actionSeparator2->setSeparator(true);
+    QAction* fileSeparator   = new QAction(this);
+    QAction* saveSeparator   = new QAction(this);
+    QAction* exportSeparator = new QAction(this);
+    fileSeparator->setSeparator(true);
+    saveSeparator->setSeparator(true);
+    exportSeparator->setSeparator(true);
 
 
     QList<QAction*> actions = {
         actionNewFile,
         actionOpenFile,
-        actionSeparator1,
+        fileSeparator,
         actionSaveCurrent,
         actionSaveAs,
         actionSaveAll,
-        actionSeparator2,
+        saveSeparator,
+        actionExportPDF,
+        exportSeparator,
         actionCloseTab,
         actionQuit
     };
@@ -114,7 +117,6 @@ void MarkdownEditor::setupActions() {
     QMenu* fileMenu = new QMenu("&File", this);
     fileMenu->addActions(actions);
     this->menuBar()->addMenu(fileMenu);
-
 }
 
 void MarkdownEditor::setupConnections() {
@@ -127,39 +129,51 @@ void MarkdownEditor::setupConnections() {
                      SIGNAL(currentChanged(int)),
                      this,
                      SLOT(swapDocument(int)));
+    QObject::connect(mTextEdit,
+                     SIGNAL(textChanged()),
+                     this,
+                     SLOT(refreshDocument()));
 
     QWebChannel* channel = new QWebChannel(this);
     channel->registerObject(QStringLiteral("content"), mDocument);
+    channel->registerObject(QStringLiteral("scrollBar"), mTextEdit->verticalScrollBar());
     mWebEngine->page()->setWebChannel(channel);
 }
-
 
 void MarkdownEditor::setupUI() {
 
     mSplitter      = new QSplitter(this);
+    mTextEdit      = new QPlainTextEdit(this);
     mTabWidget     = new MarkdownTabWidget(this);
     mHighlighter   = new MarkdownHighlighter(this);
-    mWebEngine     = new MarkdownWebEngine(this);
+    mWebEngine     = new QWebEngineView(this);
     mDocument      = new MarkdownDocument((QObject*)this);
+
+    mTabWidget->tabBar()->hide();
+
+    mTextEdit->setDocument(nullptr);
 
     mWebEngine->setUrl(QUrl("qrc:///html/index.html"));
 
-    mSplitter->addWidget(mTabWidget->stack());
+    mSplitter->addWidget(mTextEdit);
     mSplitter->addWidget(mWebEngine);
     mSplitter->setSizes(QList<int>({INT_MAX, INT_MAX}));
+    mSplitter->hide();
 
-    QWidget*     dockWidget = new QWidget();
     QPushButton* addButton  = new QPushButton("+");
     QObject::connect(addButton,
                      SIGNAL(clicked()),
                      this,
                      SLOT(addTab()));
+    addButton->setObjectName("addButton");
+
     QHBoxLayout* dockLayout = new QHBoxLayout();
 
-    addButton->setMaximumWidth(30);
-
+    dockLayout->setContentsMargins(5, 0, 0, 0);
     dockLayout->addWidget(mTabWidget->tabBar(), 0, Qt::AlignBottom);
     dockLayout->addWidget(addButton, 0, Qt::AlignLeft|Qt::AlignBottom);
+
+    QWidget*     dockWidget = new QWidget();
     dockWidget->setLayout(dockLayout);
 
     QDockWidget* dock = new QDockWidget(this);
@@ -186,15 +200,15 @@ void MarkdownEditor::closeEvent(QCloseEvent *event) {
      * If Cancel selected, ignore the event.
      * If Discard selected, accept the event.
      */
-/*
+
     QList<QString> unsavedFiles;
     MarkdownTextEdit* ptr;
 
     // Fetch unsaved files name
-    for(int i=0;i<mStackedWidget->count();i++) {
-        ptr = (MarkdownTextEdit*)mStackedWidget->widget(i);
+    for(int i=0;i<mTabWidget->stack()->count();i++) {
+        ptr = (MarkdownTextEdit*)mTabWidget->stack()->widget(i);
         if(!ptr->isSave())
-            unsavedFiles.append(mTabBar->tabText(i));
+            unsavedFiles.append(mTabWidget->tabBar()->tabText(i));
     }
 
     if(unsavedFiles.count()) {
@@ -228,12 +242,10 @@ void MarkdownEditor::closeEvent(QCloseEvent *event) {
         default:
             event->accept();
         }
-    }*/
-    event->accept();
-
+    }
 }
 
-// PUBLIC SLOTS
+// PRIVATE SLOTS
 
 void MarkdownEditor::addTab() {
     this->addTab(nullptr);
@@ -251,10 +263,6 @@ void MarkdownEditor::addTab(MarkdownTextEdit* newEditor) {
                      SIGNAL(signal_save(bool)),
                      this,
                      SLOT(updateTab(bool)));
-    QObject::connect(newEditor,
-                     SIGNAL(textChanged()),
-                     this,
-                     SLOT(refreshDocument()));
 
     mTabWidget->addWidget(newEditor, "new file");
 }
@@ -298,7 +306,22 @@ void MarkdownEditor::closeTab(int index) {
                 break;
             }
         }
+        if(index == mTabWidget->tabBar()->currentIndex())
+            mTextEdit->setDocument(nullptr);
         mTabWidget->removeTab(index);
+    }
+}
+
+void MarkdownEditor::exportAsPDF() {
+
+
+    QString filePath = QFileDialog::getSaveFileName(this,
+                                                    tr("Export as PDF"),
+                                                    QDir::homePath());
+
+    if( !filePath.isNull() ) {
+
+        mWebEngine->page()->printToPdf(filePath);
     }
 }
 
@@ -318,34 +341,14 @@ void MarkdownEditor::openFile() {
     }
 }
 
-void MarkdownEditor::refreshDocument(int index) {
+void MarkdownEditor::refreshDocument() {
 
-    if(index == -1) // triggered by textChanged of current editor
-        index = mTabWidget->tabBar()->currentIndex();
+   QTextDocument* document = mTextEdit->document();
 
-    MarkdownTextEdit* currentEditor = (MarkdownTextEdit*)mTabWidget->stack()->widget(index);
-
-    if(currentEditor != nullptr) {
-        mDocument->setText(currentEditor->toPlainText());
-        this->refreshTabColor();
-    }
+   if(document != nullptr)
+       mDocument->setText(mTextEdit->toPlainText());
     else
-        mDocument->setText("");
-}
-
-void MarkdownEditor::refreshTabColor() {
-    /* Refresh the text color of the current tab in the tab bar */
-
-    int index = mTabWidget->tabBar()->currentIndex();
-
-    MarkdownTextEdit* currentTab = (MarkdownTextEdit*)mTabWidget->stack()->currentWidget();
-
-    if(currentTab != nullptr) {
-        if(!currentTab->isSave())
-            mTabWidget->tabBar()->setTabTextColor(index, QColor::fromRgb(255, 0, 0)); // Red color if needs to be save
-        else
-            mTabWidget->tabBar()->setTabTextColor(index, QColor::fromRgb(0, 0, 0));   // Otherwise, black color
-    }
+       mDocument->setText("");
 }
 
 void MarkdownEditor::saveAll() {
@@ -380,13 +383,18 @@ void MarkdownEditor::saveCurrent() {
 
 void MarkdownEditor::swapDocument(int index) {
 
-    if(index == -1)
+    if(index == -1) {
         mHighlighter->setDocument(nullptr);
+        mSplitter->hide();
+        mTabWidget->tabBar()->hide();
+    }
     else {
         MarkdownTextEdit* currentEditor = (MarkdownTextEdit*)mTabWidget->stack()->widget(index);
         mHighlighter->setDocument(currentEditor->document());
+        mTextEdit->setDocument(currentEditor->document());
+        mSplitter->show();
+        mTabWidget->tabBar()->show();
     }
-
 }
 
 void MarkdownEditor::updateTab(bool saveSuccess) {
@@ -403,6 +411,4 @@ void MarkdownEditor::updateTab(bool saveSuccess) {
         if(currentTab != nullptr)
             mTabWidget->tabBar()->setTabText(mTabWidget->tabBar()->currentIndex(), currentTab->file()->fileName());
     }
-
-    this->refreshTabColor();
 }

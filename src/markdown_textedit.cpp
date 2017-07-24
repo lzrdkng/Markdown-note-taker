@@ -5,19 +5,13 @@
 #include <QDir>
 #include <QFileDevice>
 #include <QMessageBox>
-#include <QTextCursor>
-#include <QTextBlock>
-
-#include <iostream>
 
 const int PERMISSION_MASK = QFileDevice::ReadUser | QFileDevice::WriteUser;
-
 
 MarkdownTextEdit::MarkdownTextEdit(const QString& file, QWidget* parent) : QPlainTextEdit(parent) {
 
     // MEMBERS DECLARATION
     mFile = new QFile(file, this);
-    mCurrentblock = 0;
 
     if(file != nullptr) {
         // User has the right to read the file

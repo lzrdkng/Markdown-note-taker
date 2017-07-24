@@ -3,5 +3,6 @@
         <file>html/index.html</file>
         <file>js/marked.js</file>
         <file>css/markdown.css</file>
+        <file>style/qt-dark.qss</file>
     </qresource>
 </RCC>

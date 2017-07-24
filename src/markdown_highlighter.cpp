@@ -1,6 +1,7 @@
 #include "markdown_highlighter.hpp"
 
 #include <QColor>
+#include <Qt>
 
 MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(parent){
 
@@ -15,7 +16,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
 
 
     headerFormat.setForeground(QColor::fromRgb(192, 0, 255));
-    rule.pattern = QRegularExpression("^#{1,6}.+$", QRegularExpression::DotMatchesEverythingOption); // OK
+    rule.pattern = QRegularExpression("^#{1,6}\\s+.+$", QRegularExpression::DotMatchesEverythingOption); // OK
     rule.format  = headerFormat;
     highlightingRules.append(rule);
 

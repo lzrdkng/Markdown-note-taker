@@ -3,7 +3,6 @@
 
 #include <QFile>
 #include <QPlainTextEdit>
-#include <QList>
 
 class MarkdownTextEdit : public QPlainTextEdit {
 

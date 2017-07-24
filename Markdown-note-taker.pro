@@ -10,7 +10,6 @@ INCLUDEPATH += include
 SOURCES += src/main.cpp \
            src/markdown_textedit.cpp \
            src/markdown_highlighter.cpp \
-           src/markdown_webengine.cpp \
            src/markdown_mainwindow.cpp \
            src/markdown_tabwidget.cpp \
            src/markdown_document.cpp
@@ -21,10 +20,8 @@ DISTFILES += \
     LICENSE \
 
 HEADERS += \
-    include/constants.hpp \
     include/markdown_textedit.hpp \
     include/markdown_highlighter.hpp \
-    include/markdown_webengine.hpp \
     include/markdown_mainwindow.hpp \
     include/markdown_tabwidget.hpp \
     include/markdown_document.hpp
@@ -39,3 +36,5 @@ QT += webengine
 QT += webchannel
 
 RESOURCES += markdown.qrc \
+
+FORMS +=

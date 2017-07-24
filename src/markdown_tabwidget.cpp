@@ -8,14 +8,13 @@ MarkdownTabWidget::MarkdownTabWidget(QWidget* parent) : QWidget(parent) {
     mTabBar        = new QTabBar(this);
     mStackedWidget = new QStackedWidget(this);
 
-    mTabBar->setAutoHide(true);
+    mTabBar->setAutoHide(false);
     mTabBar->setMinimumWidth(128);
     mTabBar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
     mTabBar->setMovable(true);
     mTabBar->setTabsClosable(true);
     mTabBar->setDrawBase(true);
     mTabBar->setExpanding(false);
-    mTabBar->setStyleSheet("QTabBar::tab {min-width:128px; max-width:512px;}");
 
     QObject::connect(mTabBar,
                      SIGNAL(currentChanged(int)),

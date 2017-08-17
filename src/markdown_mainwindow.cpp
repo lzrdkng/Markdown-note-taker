@@ -151,8 +151,6 @@ void MarkdownEditor::setupUI() {
 
     mTabWidget->tabBar()->hide();
 
-    mTextEdit->setDocument(nullptr);
-
     mWebEngine->setUrl(QUrl("qrc:///html/index.html"));
 
     mSplitter->addWidget(mTextEdit);
@@ -248,10 +246,10 @@ void MarkdownEditor::closeEvent(QCloseEvent *event) {
 // PRIVATE SLOTS
 
 void MarkdownEditor::addTab() {
-    this->addTab(nullptr);
+    this->addTab(nullptr, "new file");
 }
 
-void MarkdownEditor::addTab(MarkdownTextEdit* newEditor) {
+void MarkdownEditor::addTab(MarkdownTextEdit* newEditor, const QString& label) {
     /* Add an empty tab in mTabBar.
      * Add a new widget to the stack. */
 
@@ -264,7 +262,7 @@ void MarkdownEditor::addTab(MarkdownTextEdit* newEditor) {
                      this,
                      SLOT(updateTab(bool)));
 
-    mTabWidget->addWidget(newEditor, "new file");
+    mTabWidget->addWidget(newEditor, label);
 }
 
 void MarkdownEditor::closeTab(int index) {
@@ -337,7 +335,7 @@ void MarkdownEditor::openFile() {
 
         MarkdownTextEdit* newEditor = new MarkdownTextEdit(fileName);
 
-        this->addTab(newEditor);
+        this->addTab(newEditor, fileName);
     }
 }
 

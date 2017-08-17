@@ -31,10 +31,6 @@ QPushButton#addButton {
     padding: 5px 10px;
 }
 
-QPlainTextEdit {
-    background:#2E2F30;
-    color:gray;
-}
 
 QScrollBar:vertical {
     background: #4A4B4D;

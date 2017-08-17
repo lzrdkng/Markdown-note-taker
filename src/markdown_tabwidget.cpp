@@ -15,6 +15,7 @@ MarkdownTabWidget::MarkdownTabWidget(QWidget* parent) : QWidget(parent) {
     mTabBar->setTabsClosable(true);
     mTabBar->setDrawBase(true);
     mTabBar->setExpanding(false);
+    mTabBar->setElideMode(Qt::ElideLeft);
 
     QObject::connect(mTabBar,
                      SIGNAL(currentChanged(int)),

@@ -22,9 +22,9 @@ DISTFILES += \
 HEADERS += \
     include/markdown_textedit.hpp \
     include/markdown_highlighter.hpp \
-    include/markdown_mainwindow.hpp \
     include/markdown_tabwidget.hpp \
-    include/markdown_document.hpp
+    include/markdown_document.hpp \
+    include/markdown_mainwindow.hpp
 
 OBJECTS_DIR += build
 MOC_DIR += build
@@ -36,5 +36,3 @@ QT += webengine
 QT += webchannel
 
 RESOURCES += markdown.qrc \
-
-FORMS +=

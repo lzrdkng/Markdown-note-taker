@@ -58,9 +58,9 @@ SOURCES       = src/main.cpp \
 		src/markdown_document.cpp qrc_markdown.cpp \
 		build/moc_markdown_textedit.cpp \
 		build/moc_markdown_highlighter.cpp \
-		build/moc_markdown_mainwindow.cpp \
 		build/moc_markdown_tabwidget.cpp \
-		build/moc_markdown_document.cpp
+		build/moc_markdown_document.cpp \
+		build/moc_markdown_mainwindow.cpp
 OBJECTS       = build/main.o \
 		build/markdown_textedit.o \
 		build/markdown_highlighter.o \
@@ -70,9 +70,9 @@ OBJECTS       = build/main.o \
 		build/qrc_markdown.o \
 		build/moc_markdown_textedit.o \
 		build/moc_markdown_highlighter.o \
-		build/moc_markdown_mainwindow.o \
 		build/moc_markdown_tabwidget.o \
-		build/moc_markdown_document.o
+		build/moc_markdown_document.o \
+		build/moc_markdown_mainwindow.o
 DIST          = CHANGELOG.md \
 		README.md \
 		LICENSE \
@@ -235,6 +235,7 @@ DIST          = CHANGELOG.md \
 		/qt/5.9.1/gcc_64/mkspecs/features/qt_config.prf \
 		/qt/5.9.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/qt/5.9.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/qt/5.9.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/qt/5.9.1/gcc_64/mkspecs/features/toolchain.prf \
 		/qt/5.9.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -255,9 +256,9 @@ DIST          = CHANGELOG.md \
 		/qt/5.9.1/gcc_64/mkspecs/features/lex.prf \
 		Markdown-note-taker.pro include/markdown_textedit.hpp \
 		include/markdown_highlighter.hpp \
-		include/markdown_mainwindow.hpp \
 		include/markdown_tabwidget.hpp \
-		include/markdown_document.hpp src/main.cpp \
+		include/markdown_document.hpp \
+		include/markdown_mainwindow.hpp src/main.cpp \
 		src/markdown_textedit.cpp \
 		src/markdown_highlighter.cpp \
 		src/markdown_mainwindow.cpp \
@@ -434,6 +435,7 @@ Makefile: Markdown-note-taker.pro /qt/5.9.1/gcc_64/mkspecs/linux-g++/qmake.conf 
 		/qt/5.9.1/gcc_64/mkspecs/features/qt_config.prf \
 		/qt/5.9.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/qt/5.9.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/qt/5.9.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/qt/5.9.1/gcc_64/mkspecs/features/toolchain.prf \
 		/qt/5.9.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -626,6 +628,7 @@ Makefile: Markdown-note-taker.pro /qt/5.9.1/gcc_64/mkspecs/linux-g++/qmake.conf 
 /qt/5.9.1/gcc_64/mkspecs/features/qt_config.prf:
 /qt/5.9.1/gcc_64/mkspecs/linux-g++/qmake.conf:
 /qt/5.9.1/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /qt/5.9.1/gcc_64/mkspecs/features/exclusive_builds.prf:
 /qt/5.9.1/gcc_64/mkspecs/features/toolchain.prf:
 /qt/5.9.1/gcc_64/mkspecs/features/default_pre.prf:
@@ -674,7 +677,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents markdown.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /qt/5.9.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/markdown_textedit.hpp include/markdown_highlighter.hpp include/markdown_mainwindow.hpp include/markdown_tabwidget.hpp include/markdown_document.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/markdown_textedit.hpp include/markdown_highlighter.hpp include/markdown_tabwidget.hpp include/markdown_document.hpp include/markdown_mainwindow.hpp $(DISTDIR)/
 	$(COPY_FILE) --parents src/main.cpp src/markdown_textedit.cpp src/markdown_highlighter.cpp src/markdown_mainwindow.cpp src/markdown_tabwidget.cpp src/markdown_document.cpp $(DISTDIR)/
 
 
@@ -716,9 +719,9 @@ compiler_moc_predefs_clean:
 build/moc_predefs.h: /qt/5.9.1/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -std=gnu++11 -Wall -W -dM -E -o build/moc_predefs.h /qt/5.9.1/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc_markdown_textedit.cpp build/moc_markdown_highlighter.cpp build/moc_markdown_mainwindow.cpp build/moc_markdown_tabwidget.cpp build/moc_markdown_document.cpp
+compiler_moc_header_make_all: build/moc_markdown_textedit.cpp build/moc_markdown_highlighter.cpp build/moc_markdown_tabwidget.cpp build/moc_markdown_document.cpp build/moc_markdown_mainwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_markdown_textedit.cpp build/moc_markdown_highlighter.cpp build/moc_markdown_mainwindow.cpp build/moc_markdown_tabwidget.cpp build/moc_markdown_document.cpp
+	-$(DEL_FILE) build/moc_markdown_textedit.cpp build/moc_markdown_highlighter.cpp build/moc_markdown_tabwidget.cpp build/moc_markdown_document.cpp build/moc_markdown_mainwindow.cpp
 build/moc_markdown_textedit.cpp: /qt/5.9.1/gcc_64/include/QtCore/QFile \
 		/qt/5.9.1/gcc_64/include/QtCore/qfile.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qfiledevice.h \
@@ -952,183 +955,6 @@ build/moc_markdown_highlighter.cpp: /qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/bin/moc
 	/qt/5.9.1/gcc_64/bin/moc $(DEFINES) --include build/moc_predefs.h -I/qt/5.9.1/gcc_64/mkspecs/linux-g++ -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker/include -I/qt/5.9.1/gcc_64/include -I/qt/5.9.1/gcc_64/include/QtWebEngineWidgets -I/qt/5.9.1/gcc_64/include/QtPrintSupport -I/qt/5.9.1/gcc_64/include/QtWidgets -I/qt/5.9.1/gcc_64/include/QtWebEngine -I/qt/5.9.1/gcc_64/include/QtWebEngineCore -I/qt/5.9.1/gcc_64/include/QtQuick -I/qt/5.9.1/gcc_64/include/QtGui -I/qt/5.9.1/gcc_64/include/QtWebChannel -I/qt/5.9.1/gcc_64/include/QtQml -I/qt/5.9.1/gcc_64/include/QtNetwork -I/qt/5.9.1/gcc_64/include/QtPositioning -I/qt/5.9.1/gcc_64/include/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/markdown_highlighter.hpp -o build/moc_markdown_highlighter.cpp
 
-build/moc_markdown_mainwindow.cpp: /qt/5.9.1/gcc_64/include/QtWidgets/QMainWindow \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qmainwindow.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtguiglobal.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qglobal.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qconfig.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtcore-config.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsystemdetection.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qprocessordetection.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcompilerdetection.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtypeinfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsysinfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlogging.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qflags.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qatomic.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbasicatomic.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qgenericatomic.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qatomic_msvc.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qglobalstatic.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmutex.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qnumeric.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qversiontagging.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtgui-config.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qwidget.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qwindowdefs.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qnamespace.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qwindowdefs_win.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstring.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qchar.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbytearray.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qrefcount.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qarraydata.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstringbuilder.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlist.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qalgorithms.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qiterator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qhashfunctions.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpair.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbytearraylist.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstringlist.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qregexp.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstringmatcher.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcoreevent.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qscopedpointer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmetatype.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qvarlengtharray.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcontainerfwd.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qobject_impl.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmargins.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpaintdevice.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qrect.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsize.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpoint.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpalette.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qcolor.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qrgb.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qrgba64.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qbrush.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qvector.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qmatrix.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpolygon.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qregion.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdatastream.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qiodevice.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qline.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtransform.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpainterpath.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qimage.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpixelformat.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpixmap.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsharedpointer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qshareddata.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qhash.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qfont.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qfontmetrics.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qfontinfo.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qsizepolicy.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qcursor.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qkeysequence.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qevent.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qvariant.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmap.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdebug.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtextstream.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlocale.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qset.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcontiguouscache.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qurl.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qurlquery.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfile.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfiledevice.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qvector2d.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtouchdevice.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qtabwidget.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qicon.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/QSplitter \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qsplitter.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qframe.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/QPlainTextEdit \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qplaintextedit.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qtextedit.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextdocument.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextoption.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextcursor.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextformat.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpen.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextlayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qglyphrun.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qrawfont.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qfontdatabase.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/QWebEngineView \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebengineview.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpainter.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkaccessmanager.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetwork-config.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkrequest.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QSharedDataPointer \
-		/qt/5.9.1/gcc_64/include/QtCore/QString \
-		/qt/5.9.1/gcc_64/include/QtCore/QUrl \
-		/qt/5.9.1/gcc_64/include/QtCore/QVariant \
-		/qt/5.9.1/gcc_64/include/QtCore/QVector \
-		/qt/5.9.1/gcc_64/include/QtCore/QObject \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QSslConfiguration \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslconfiguration.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtcpsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qabstractsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslerror.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcertificate.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcryptographichash.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdatetime.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qssl.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QFlags \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QSslPreSharedKeyAuthenticator \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslpresharedkeyauthenticator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QMetaType \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qtwebenginewidgetsglobal.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginepage.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginecertificateerror.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginedownloaditem.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginecallback.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qtwebenginecoreglobal.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginehttprequest.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpagelayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpagesize.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QCloseEvent \
-		include/markdown_highlighter.hpp \
-		/qt/5.9.1/gcc_64/include/QtGui/QSyntaxHighlighter \
-		/qt/5.9.1/gcc_64/include/QtGui/qsyntaxhighlighter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextobject.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QRegularExpression \
-		/qt/5.9.1/gcc_64/include/QtCore/qregularexpression.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QTextCharFormat \
-		include/markdown_textedit.hpp \
-		/qt/5.9.1/gcc_64/include/QtCore/QFile \
-		include/markdown_tabwidget.hpp \
-		/qt/5.9.1/gcc_64/include/QtWidgets/QTabBar \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qtabbar.h \
-		/qt/5.9.1/gcc_64/include/QtWidgets/QStackedWidget \
-		/qt/5.9.1/gcc_64/include/QtWidgets/qstackedwidget.h \
-		include/markdown_document.hpp \
-		include/markdown_mainwindow.hpp \
-		build/moc_predefs.h \
-		/qt/5.9.1/gcc_64/bin/moc
-	/qt/5.9.1/gcc_64/bin/moc $(DEFINES) --include build/moc_predefs.h -I/qt/5.9.1/gcc_64/mkspecs/linux-g++ -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker/include -I/qt/5.9.1/gcc_64/include -I/qt/5.9.1/gcc_64/include/QtWebEngineWidgets -I/qt/5.9.1/gcc_64/include/QtPrintSupport -I/qt/5.9.1/gcc_64/include/QtWidgets -I/qt/5.9.1/gcc_64/include/QtWebEngine -I/qt/5.9.1/gcc_64/include/QtWebEngineCore -I/qt/5.9.1/gcc_64/include/QtQuick -I/qt/5.9.1/gcc_64/include/QtGui -I/qt/5.9.1/gcc_64/include/QtWebChannel -I/qt/5.9.1/gcc_64/include/QtQml -I/qt/5.9.1/gcc_64/include/QtNetwork -I/qt/5.9.1/gcc_64/include/QtPositioning -I/qt/5.9.1/gcc_64/include/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/markdown_mainwindow.hpp -o build/moc_markdown_mainwindow.cpp
-
 build/moc_markdown_tabwidget.cpp: /qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
@@ -1293,6 +1119,183 @@ build/moc_markdown_document.cpp: /qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/bin/moc
 	/qt/5.9.1/gcc_64/bin/moc $(DEFINES) --include build/moc_predefs.h -I/qt/5.9.1/gcc_64/mkspecs/linux-g++ -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker/include -I/qt/5.9.1/gcc_64/include -I/qt/5.9.1/gcc_64/include/QtWebEngineWidgets -I/qt/5.9.1/gcc_64/include/QtPrintSupport -I/qt/5.9.1/gcc_64/include/QtWidgets -I/qt/5.9.1/gcc_64/include/QtWebEngine -I/qt/5.9.1/gcc_64/include/QtWebEngineCore -I/qt/5.9.1/gcc_64/include/QtQuick -I/qt/5.9.1/gcc_64/include/QtGui -I/qt/5.9.1/gcc_64/include/QtWebChannel -I/qt/5.9.1/gcc_64/include/QtQml -I/qt/5.9.1/gcc_64/include/QtNetwork -I/qt/5.9.1/gcc_64/include/QtPositioning -I/qt/5.9.1/gcc_64/include/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/markdown_document.hpp -o build/moc_markdown_document.cpp
 
+build/moc_markdown_mainwindow.cpp: /qt/5.9.1/gcc_64/include/QtWidgets/QMainWindow \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qmainwindow.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtguiglobal.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qglobal.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qconfig.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qtcore-config.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qsystemdetection.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qprocessordetection.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcompilerdetection.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qtypeinfo.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qsysinfo.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qlogging.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qflags.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qatomic.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qbasicatomic.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qgenericatomic.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qatomic_msvc.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qglobalstatic.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qmutex.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qnumeric.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qversiontagging.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtgui-config.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qwidget.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qwindowdefs.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qnamespace.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qstring.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qchar.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qbytearray.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qrefcount.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qarraydata.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qstringbuilder.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qlist.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qalgorithms.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qiterator.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qhashfunctions.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qpair.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qbytearraylist.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qstringlist.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qregexp.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qstringmatcher.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcoreevent.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qscopedpointer.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qmetatype.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qvarlengtharray.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcontainerfwd.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qobject_impl.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qmargins.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpaintdevice.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qrect.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qsize.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qpoint.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpalette.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qcolor.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qrgb.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qrgba64.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qbrush.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qvector.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qmatrix.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpolygon.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qregion.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qdatastream.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qiodevice.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qline.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtransform.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpainterpath.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qimage.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpixelformat.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpixmap.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qsharedpointer.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qshareddata.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qhash.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qfont.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qfontmetrics.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qfontinfo.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qcursor.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qkeysequence.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qevent.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qvariant.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qmap.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qdebug.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qtextstream.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qlocale.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qset.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qurl.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qurlquery.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qfile.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qfiledevice.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qvector2d.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtouchdevice.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qtabwidget.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qicon.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/QSplitter \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qsplitter.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qframe.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/QPlainTextEdit \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qplaintextedit.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qtextedit.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextdocument.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextoption.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextcursor.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextformat.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpen.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextlayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qglyphrun.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qrawfont.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qfontdatabase.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/QWebEngineView \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebengineview.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpainter.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkaccessmanager.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetwork-config.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkrequest.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QSharedDataPointer \
+		/qt/5.9.1/gcc_64/include/QtCore/QString \
+		/qt/5.9.1/gcc_64/include/QtCore/QUrl \
+		/qt/5.9.1/gcc_64/include/QtCore/QVariant \
+		/qt/5.9.1/gcc_64/include/QtCore/QVector \
+		/qt/5.9.1/gcc_64/include/QtCore/QObject \
+		/qt/5.9.1/gcc_64/include/QtNetwork/QSslConfiguration \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslconfiguration.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtcpsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qabstractsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslerror.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcertificate.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcryptographichash.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qdatetime.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qssl.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QFlags \
+		/qt/5.9.1/gcc_64/include/QtNetwork/QSslPreSharedKeyAuthenticator \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslpresharedkeyauthenticator.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QMetaType \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qtwebenginewidgetsglobal.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginepage.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginecertificateerror.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginedownloaditem.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginecallback.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qtwebenginecoreglobal.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginehttprequest.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpagelayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpagesize.h \
+		/qt/5.9.1/gcc_64/include/QtGui/QCloseEvent \
+		src/markdown_highlighter.hpp \
+		/qt/5.9.1/gcc_64/include/QtGui/QSyntaxHighlighter \
+		/qt/5.9.1/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextobject.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QRegularExpression \
+		/qt/5.9.1/gcc_64/include/QtCore/qregularexpression.h \
+		/qt/5.9.1/gcc_64/include/QtGui/QTextCharFormat \
+		src/markdown_textedit.hpp \
+		/qt/5.9.1/gcc_64/include/QtCore/QFile \
+		src/markdown_tabwidget.hpp \
+		/qt/5.9.1/gcc_64/include/QtWidgets/QTabBar \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qtabbar.h \
+		/qt/5.9.1/gcc_64/include/QtWidgets/QStackedWidget \
+		/qt/5.9.1/gcc_64/include/QtWidgets/qstackedwidget.h \
+		src/markdown_document.hpp \
+		include/markdown_mainwindow.hpp \
+		build/moc_predefs.h \
+		/qt/5.9.1/gcc_64/bin/moc
+	/qt/5.9.1/gcc_64/bin/moc $(DEFINES) --include build/moc_predefs.h -I/qt/5.9.1/gcc_64/mkspecs/linux-g++ -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker -I/home/olivier/Documents/Projects/Markdown/Markdown-note-taker/include -I/qt/5.9.1/gcc_64/include -I/qt/5.9.1/gcc_64/include/QtWebEngineWidgets -I/qt/5.9.1/gcc_64/include/QtPrintSupport -I/qt/5.9.1/gcc_64/include/QtWidgets -I/qt/5.9.1/gcc_64/include/QtWebEngine -I/qt/5.9.1/gcc_64/include/QtWebEngineCore -I/qt/5.9.1/gcc_64/include/QtQuick -I/qt/5.9.1/gcc_64/include/QtGui -I/qt/5.9.1/gcc_64/include/QtWebChannel -I/qt/5.9.1/gcc_64/include/QtQml -I/qt/5.9.1/gcc_64/include/QtNetwork -I/qt/5.9.1/gcc_64/include/QtPositioning -I/qt/5.9.1/gcc_64/include/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/markdown_mainwindow.hpp -o build/moc_markdown_mainwindow.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all:
@@ -1413,402 +1416,12 @@ build/main.o: src/main.cpp /qt/5.9.1/gcc_64/include/QtWidgets/QApplication \
 		/qt/5.9.1/gcc_64/include/QtGui/qtouchdevice.h \
 		/qt/5.9.1/gcc_64/include/QtGui/qguiapplication.h \
 		/qt/5.9.1/gcc_64/include/QtGui/qinputmethod.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/QtWebEngine \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/QtWebEngineDepends \
-		/qt/5.9.1/gcc_64/include/QtCore/QtCore \
-		/qt/5.9.1/gcc_64/include/QtCore/QtCoreDepends \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstractanimation.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstracteventdispatcher.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstractitemmodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstractproxymodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstractstate.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qabstracttransition.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qanimationgroup.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qarraydataops.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qarraydatapointer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbasictimer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbitarray.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbuffer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qbytearraymatcher.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcache.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcollator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcommandlineoption.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcommandlineparser.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qcryptographichash.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdatetime.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdeadlinetimer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qelapsedtimer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdir.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfileinfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qdiriterator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qeasingcurve.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qendian.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qeventtransition.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qexception.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfactoryinterface.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfileselector.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QObject \
-		/qt/5.9.1/gcc_64/include/QtCore/QStringList \
-		/qt/5.9.1/gcc_64/include/QtCore/qfilesystemwatcher.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfinalstate.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfuture.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfutureinterface.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qrunnable.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qresultstore.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfuturesynchronizer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qfuturewatcher.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qhistorystate.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qidentityproxymodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qisenum.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qitemselectionmodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qjsonarray.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qjsonvalue.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qjsondocument.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qjsonobject.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlibrary.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlibraryinfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qversionnumber.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlinkedlist.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qlockfile.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qloggingcategory.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmath.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmessageauthenticationcode.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmetaobject.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmimedata.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmimedatabase.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qmimetype.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qobjectcleanuphandler.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qoperatingsystemversion.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qparallelanimationgroup.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpauseanimation.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qplugin.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpointer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpluginloader.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qprocess.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qpropertyanimation.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qvariantanimation.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qqueue.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qreadwritelock.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qregularexpression.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qresource.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsavefile.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qscopedvaluerollback.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsemaphore.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsequentialanimationgroup.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsettings.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsharedmemory.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsignalmapper.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsignaltransition.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsocketnotifier.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsortfilterproxymodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstack.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstandardpaths.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstate.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstatemachine.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstorageinfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qstringlistmodel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qsystemsemaphore.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtemporarydir.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QScopedPointer \
-		/qt/5.9.1/gcc_64/include/QtCore/qtemporaryfile.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtextboundaryfinder.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtextcodec.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qthread.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qthreadpool.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qthreadstorage.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtimeline.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtimer.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtimezone.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtranslator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtypetraits.h \
-		/qt/5.9.1/gcc_64/include/QtCore/quuid.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qwaitcondition.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qwineventnotifier.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qxmlstream.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qtcoreversion.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QtGui \
-		/qt/5.9.1/gcc_64/include/QtGui/QtGuiDepends \
-		/qt/5.9.1/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextlayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextformat.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpen.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextoption.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qglyphrun.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qrawfont.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qfontdatabase.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextcursor.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextdocument.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qaccessible.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qaccessiblebridge.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qaccessibleobject.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qaccessibleplugin.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qbackingstore.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qwindow.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QEvent \
-		/qt/5.9.1/gcc_64/include/QtCore/QMargins \
-		/qt/5.9.1/gcc_64/include/QtCore/QRect \
-		/qt/5.9.1/gcc_64/include/QtGui/qsurface.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qsurfaceformat.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qicon.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qbitmap.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qclipboard.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qdesktopservices.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qdrag.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qgenericmatrix.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qgenericplugin.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qgenericpluginfactory.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qiconengine.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qiconengineplugin.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qimageiohandler.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qimagereader.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qimagewriter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qmatrix4x4.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qvector3d.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qvector4d.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qquaternion.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qmovie.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qoffscreensurface.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengl.h \
-		/qt/5.9.1/gcc_64/include/QtCore/qt_windows.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengles2ext.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglext.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglbuffer.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglcontext.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QSurfaceFormat \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglversionfunctions.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengldebug.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglextrafunctions.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglfunctions.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglframebufferobject.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglpaintdevice.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglpixeltransferoptions.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QSharedDataPointer \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglshaderprogram.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengltexture.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengltextureblitter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QMatrix3x3 \
-		/qt/5.9.1/gcc_64/include/QtGui/QMatrix4x4 \
-		/qt/5.9.1/gcc_64/include/QtGui/qopengltimerquery.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglvertexarrayobject.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qopenglwindow.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QPaintDeviceWindow \
-		/qt/5.9.1/gcc_64/include/QtGui/qpaintdevicewindow.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QWindow \
-		/qt/5.9.1/gcc_64/include/QtGui/QPaintDevice \
-		/qt/5.9.1/gcc_64/include/QtGui/QOpenGLContext \
-		/qt/5.9.1/gcc_64/include/QtGui/QImage \
-		/qt/5.9.1/gcc_64/include/QtGui/qpagedpaintdevice.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpagelayout.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpagesize.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpaintengine.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpainter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpdfwriter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpicture.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpictureformatplugin.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qpixmapcache.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qrasterwindow.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qscreen.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QList \
-		/qt/5.9.1/gcc_64/include/QtCore/QSize \
-		/qt/5.9.1/gcc_64/include/QtCore/QSizeF \
-		/qt/5.9.1/gcc_64/include/QtGui/QTransform \
-		/qt/5.9.1/gcc_64/include/QtGui/qsessionmanager.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qstandarditemmodel.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qstatictext.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qstylehints.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qsyntaxhighlighter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextobject.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextdocumentfragment.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextdocumentwriter.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtextlist.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtexttable.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qvalidator.h \
-		/qt/5.9.1/gcc_64/include/QtGui/qtguiversion.h \
-		/qt/5.9.1/gcc_64/include/QtQml/QtQml \
-		/qt/5.9.1/gcc_64/include/QtQml/QtQmlDepends \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QtNetwork \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QtNetworkDepends \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetwork-config.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qabstractnetworkcache.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkrequest.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QString \
-		/qt/5.9.1/gcc_64/include/QtCore/QUrl \
-		/qt/5.9.1/gcc_64/include/QtCore/QVariant \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qabstractsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qauthenticator.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qdnslookup.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qhostaddress.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qhostinfo.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qhstspolicy.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qhttpmultipart.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QByteArray \
-		/qt/5.9.1/gcc_64/include/QtCore/QIODevice \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QNetworkRequest \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qlocalserver.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qlocalsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkaccessmanager.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QVector \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QSslConfiguration \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslconfiguration.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtcpsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslerror.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcertificate.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qssl.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QFlags \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QSslPreSharedKeyAuthenticator \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslpresharedkeyauthenticator.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QMetaType \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkconfigmanager.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkconfiguration.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkcookie.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkcookiejar.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkdatagram.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkdiskcache.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkinterface.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkproxy.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkreply.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/QNetworkAccessManager \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworksession.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsctpserver.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtcpserver.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsctpsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcertificateextension.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcipher.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qssldiffiehellmanparameters.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslellipticcurve.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QHash \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qsslkey.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qudpsocket.h \
-		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetworkversion.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qtqmlglobal.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qtqml-config.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qjsengine.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qjsvalue.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qjsvalueiterator.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqml.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlprivate.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlparserstatus.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlpropertyvaluesource.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmllist.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlabstracturlinterceptor.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlapplicationengine.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlengine.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlerror.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmldebug.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlcomponent.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlcontext.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlexpression.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlscriptstring.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlextensioninterface.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlextensionplugin.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlfile.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlfileselector.h \
-		/qt/5.9.1/gcc_64/include/QtQml/QQmlEngine \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlincubator.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlinfo.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlnetworkaccessmanagerfactory.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlproperty.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qqmlpropertymap.h \
-		/qt/5.9.1/gcc_64/include/QtQml/qtqmlversion.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/QtQuick \
-		/qt/5.9.1/gcc_64/include/QtQuick/QtQuickDepends \
-		/qt/5.9.1/gcc_64/include/QtQuick/qtquickglobal.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qtquick-config.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickframebufferobject.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/QQuickItem \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickitem.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickimageprovider.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickitemgrabresult.h \
-		/qt/5.9.1/gcc_64/include/QtQml/QJSValue \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickpainteditem.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickrendercontrol.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquicktextdocument.h \
-		/qt/5.9.1/gcc_64/include/QtGui/QTextDocument \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickview.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qquickwindow.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgrendererinterface.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgnode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsggeometry.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QRectF \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgabstractrenderer.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgengine.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgflatcolormaterial.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgmaterial.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgimagenode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgtexture.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgninepatchnode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgrectanglenode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgrendernode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgsimplematerial.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgsimplerectnode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgsimpletexturenode.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgtexturematerial.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgtextureprovider.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qsgvertexcolormaterial.h \
-		/qt/5.9.1/gcc_64/include/QtQuick/qtquickversion.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/QtWebEngineCore \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/QtWebEngineCoreDepends \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/QtWebChannel \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/QtWebChannelDepends \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/qwebchannelglobal.h \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/qqmlwebchannel.h \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/QWebChannel \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/qwebchannel.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QJsonValue \
-		/qt/5.9.1/gcc_64/include/QtQml/QQmlListProperty \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/qwebchannelabstracttransport.h \
-		/qt/5.9.1/gcc_64/include/QtWebChannel/qtwebchannelversion.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QtPositioning \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QtPositioningDepends \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qpositioningglobal.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeoaddress.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeoareamonitorinfo.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoCoordinate \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeocoordinate.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoShape \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeoshape.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QVariantMap \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeoareamonitorsource.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoAreaMonitorInfo \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoPositionInfoSource \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeopositioninfosource.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoPositionInfo \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeopositioninfo.h \
-		/qt/5.9.1/gcc_64/include/QtCore/QDateTime \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeocircle.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoRectangle \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeorectangle.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeolocation.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeopath.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeopositioninfosourcefactory.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoSatelliteInfoSource \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeosatelliteinfosource.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoSatelliteInfo \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qgeosatelliteinfo.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/QGeoAreaMonitorSource \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qnmeapositioninfosource.h \
-		/qt/5.9.1/gcc_64/include/QtPositioning/qtpositioningversion.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qtwebenginecoreglobal.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginecallback.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginecookiestore.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginehttprequest.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebengineurlrequestinfo.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebengineurlrequestinterceptor.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebengineurlrequestjob.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebengineurlschemehandler.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qtwebenginecoreversion.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/qtwebengineglobal.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/qquickwebengineprofile.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/qquickwebenginescript.h \
-		/qt/5.9.1/gcc_64/include/QtWebEngine/qtwebengineversion.h \
 		/qt/5.9.1/gcc_64/include/QtCore/QFile \
-		include/markdown_mainwindow.hpp \
+		src/markdown_mainwindow.hpp \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QMainWindow \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qmainwindow.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qtabwidget.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qicon.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QSplitter \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qsplitter.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qframe.h \
@@ -1816,27 +1429,70 @@ build/main.o: src/main.cpp /qt/5.9.1/gcc_64/include/QtWidgets/QApplication \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qplaintextedit.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qtextedit.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextdocument.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextoption.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextcursor.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextformat.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpen.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextlayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qglyphrun.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qrawfont.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qfontdatabase.h \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/QWebEngineView \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebengineview.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpainter.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkaccessmanager.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtnetwork-config.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qnetworkrequest.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QSharedDataPointer \
+		/qt/5.9.1/gcc_64/include/QtCore/QString \
+		/qt/5.9.1/gcc_64/include/QtCore/QUrl \
+		/qt/5.9.1/gcc_64/include/QtCore/QVariant \
+		/qt/5.9.1/gcc_64/include/QtCore/QVector \
+		/qt/5.9.1/gcc_64/include/QtCore/QObject \
+		/qt/5.9.1/gcc_64/include/QtNetwork/QSslConfiguration \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslconfiguration.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qtcpsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qabstractsocket.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslerror.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslcertificate.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qcryptographichash.h \
+		/qt/5.9.1/gcc_64/include/QtCore/qdatetime.h \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qssl.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QFlags \
+		/qt/5.9.1/gcc_64/include/QtNetwork/QSslPreSharedKeyAuthenticator \
+		/qt/5.9.1/gcc_64/include/QtNetwork/qsslpresharedkeyauthenticator.h \
+		/qt/5.9.1/gcc_64/include/QtCore/QMetaType \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qtwebenginewidgetsglobal.h \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginepage.h \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginecertificateerror.h \
 		/qt/5.9.1/gcc_64/include/QtWebEngineWidgets/qwebenginedownloaditem.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginecallback.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qtwebenginecoreglobal.h \
+		/qt/5.9.1/gcc_64/include/QtWebEngineCore/qwebenginehttprequest.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpagelayout.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qpagesize.h \
 		/qt/5.9.1/gcc_64/include/QtGui/QCloseEvent \
-		include/markdown_highlighter.hpp \
+		src/markdown_highlighter.hpp \
 		/qt/5.9.1/gcc_64/include/QtGui/QSyntaxHighlighter \
+		/qt/5.9.1/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		/qt/5.9.1/gcc_64/include/QtGui/qtextobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/QRegularExpression \
+		/qt/5.9.1/gcc_64/include/QtCore/qregularexpression.h \
 		/qt/5.9.1/gcc_64/include/QtGui/QTextCharFormat \
-		include/markdown_textedit.hpp \
-		include/markdown_tabwidget.hpp \
+		src/markdown_textedit.hpp \
+		src/markdown_tabwidget.hpp \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QTabBar \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qtabbar.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QStackedWidget \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qstackedwidget.h \
-		include/markdown_document.hpp
+		src/markdown_document.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
 
-build/markdown_textedit.o: src/markdown_textedit.cpp include/markdown_textedit.hpp \
+build/markdown_textedit.o: src/markdown_textedit.cpp src/markdown_textedit.hpp \
 		/qt/5.9.1/gcc_64/include/QtCore/QFile \
 		/qt/5.9.1/gcc_64/include/QtCore/qfile.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qfiledevice.h \
@@ -1964,7 +1620,7 @@ build/markdown_textedit.o: src/markdown_textedit.cpp include/markdown_textedit.h
 		/qt/5.9.1/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/markdown_textedit.o src/markdown_textedit.cpp
 
-build/markdown_highlighter.o: src/markdown_highlighter.cpp include/markdown_highlighter.hpp \
+build/markdown_highlighter.o: src/markdown_highlighter.cpp src/markdown_highlighter.hpp \
 		/qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
@@ -2077,7 +1733,7 @@ build/markdown_highlighter.o: src/markdown_highlighter.cpp include/markdown_high
 		/qt/5.9.1/gcc_64/include/QtCore/Qt
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/markdown_highlighter.o src/markdown_highlighter.cpp
 
-build/markdown_mainwindow.o: src/markdown_mainwindow.cpp include/markdown_mainwindow.hpp \
+build/markdown_mainwindow.o: src/markdown_mainwindow.cpp src/markdown_mainwindow.hpp \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QMainWindow \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qmainwindow.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -2235,21 +1891,21 @@ build/markdown_mainwindow.o: src/markdown_mainwindow.cpp include/markdown_mainwi
 		/qt/5.9.1/gcc_64/include/QtGui/qpagelayout.h \
 		/qt/5.9.1/gcc_64/include/QtGui/qpagesize.h \
 		/qt/5.9.1/gcc_64/include/QtGui/QCloseEvent \
-		include/markdown_highlighter.hpp \
+		src/markdown_highlighter.hpp \
 		/qt/5.9.1/gcc_64/include/QtGui/QSyntaxHighlighter \
 		/qt/5.9.1/gcc_64/include/QtGui/qsyntaxhighlighter.h \
 		/qt/5.9.1/gcc_64/include/QtGui/qtextobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/QRegularExpression \
 		/qt/5.9.1/gcc_64/include/QtCore/qregularexpression.h \
 		/qt/5.9.1/gcc_64/include/QtGui/QTextCharFormat \
-		include/markdown_textedit.hpp \
+		src/markdown_textedit.hpp \
 		/qt/5.9.1/gcc_64/include/QtCore/QFile \
-		include/markdown_tabwidget.hpp \
+		src/markdown_tabwidget.hpp \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QTabBar \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qtabbar.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QStackedWidget \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qstackedwidget.h \
-		include/markdown_document.hpp \
+		src/markdown_document.hpp \
 		/qt/5.9.1/gcc_64/include/QtWidgets/QAction \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qaction.h \
 		/qt/5.9.1/gcc_64/include/QtWidgets/qactiongroup.h \
@@ -2290,7 +1946,7 @@ build/markdown_mainwindow.o: src/markdown_mainwindow.cpp include/markdown_mainwi
 		/qt/5.9.1/gcc_64/include/QtWebChannel/qwebchannelglobal.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/markdown_mainwindow.o src/markdown_mainwindow.cpp
 
-build/markdown_tabwidget.o: src/markdown_tabwidget.cpp include/markdown_tabwidget.hpp \
+build/markdown_tabwidget.o: src/markdown_tabwidget.cpp src/markdown_tabwidget.hpp \
 		/qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
@@ -2403,7 +2059,7 @@ build/markdown_tabwidget.o: src/markdown_tabwidget.cpp include/markdown_tabwidge
 		/qt/5.9.1/gcc_64/include/QtWidgets/QSizePolicy
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/markdown_tabwidget.o src/markdown_tabwidget.cpp
 
-build/markdown_document.o: src/markdown_document.cpp include/markdown_document.hpp \
+build/markdown_document.o: src/markdown_document.cpp src/markdown_document.hpp \
 		/qt/5.9.1/gcc_64/include/QtCore/QObject \
 		/qt/5.9.1/gcc_64/include/QtCore/qobject.h \
 		/qt/5.9.1/gcc_64/include/QtCore/qobjectdefs.h \
@@ -2463,14 +2119,14 @@ build/moc_markdown_textedit.o: build/moc_markdown_textedit.cpp
 build/moc_markdown_highlighter.o: build/moc_markdown_highlighter.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_markdown_highlighter.o build/moc_markdown_highlighter.cpp
 
-build/moc_markdown_mainwindow.o: build/moc_markdown_mainwindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_markdown_mainwindow.o build/moc_markdown_mainwindow.cpp
-
 build/moc_markdown_tabwidget.o: build/moc_markdown_tabwidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_markdown_tabwidget.o build/moc_markdown_tabwidget.cpp
 
 build/moc_markdown_document.o: build/moc_markdown_document.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_markdown_document.o build/moc_markdown_document.cpp
+
+build/moc_markdown_mainwindow.o: build/moc_markdown_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_markdown_mainwindow.o build/moc_markdown_mainwindow.cpp
 
 ####### Install
 

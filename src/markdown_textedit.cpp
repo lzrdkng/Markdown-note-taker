@@ -31,6 +31,12 @@ MarkdownTextEdit::MarkdownTextEdit(const QString& file, QWidget* parent) : QPlai
         }
     }
     this->hashText();
+
+    QFont standardFont;
+
+    standardFont.setPixelSize(20);
+
+    setFont(standardFont);
 }
 
 // PUBLIC METHODS

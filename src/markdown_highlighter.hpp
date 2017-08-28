@@ -41,6 +41,7 @@ private:
     Format emphaseFormat;
     Format headerFormat;
     Format italicFormat;
+    Format linkFormat;
     Format listFormat;
     Format quoteFormat;
     Format centerFormat;

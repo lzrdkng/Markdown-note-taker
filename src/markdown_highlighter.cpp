@@ -9,13 +9,14 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
 
     // SINGLE LINE EXPRESSIONS
 
+    int standardPixelSize = 20;
 
     // Quota markdown >.+
 
     QFont quoteFont;
 
     quoteFont.setItalic(true);
-    quoteFont.setPixelSize(18);
+    quoteFont.setPixelSize(standardPixelSize);
     quoteFormat.setFont(quoteFont);
 
     QColor quoteBackground;
@@ -34,7 +35,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
 
     QFont headerFont;
 
-    headerFont.setPixelSize(32);
+    headerFont.setPixelSize(standardPixelSize);
     headerFont.setWeight(QFont::ExtraBold);
     headerFormat.setFont(headerFont);
 
@@ -50,7 +51,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont breakFont;
 
     breakFont.setBold(true);
-    breakFont.setPixelSize(24);
+    breakFont.setPixelSize(standardPixelSize);
     breakFormat.setFont(breakFont);
 
     breakFormat.setForeground(QColor::fromRgb(0, 80, 0));
@@ -65,12 +66,12 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont italicFont;
 
     italicFont.setItalic(true);
-    italicFont.setPixelSize(20);
+    italicFont.setPixelSize(standardPixelSize);
     italicFormat.setFont(italicFont);
 
     italicFormat.setForeground(QColor::fromRgb(192, 135, 66));
 
-    rule.pattern = QRegularExpression("(?<i>[_*])(.+?)\\g<i>"); // OK
+    rule.pattern = QRegularExpression("(?<i>[_*])(\\w(\\w|\\s)+?\\w)\\g<i>"); // OK
     rule.format  = italicFormat;
     highlightingRules.append(rule);
 
@@ -80,12 +81,12 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont boldFont;
 
     boldFont.setBold(true);
-    boldFont.setPixelSize(20);
+    boldFont.setPixelSize(standardPixelSize);
     boldFormat.setFont(boldFont);
 
     boldFormat.setForeground(QColor::fromRgb(0, 64, 128));
 
-    rule.pattern = QRegularExpression("(?<b>[_*]){2}(.+?)\\g<b>{2}"); // OK
+    rule.pattern = QRegularExpression("(?<b>[_*]){2}(\\w(\\w|\\s)+?\\w)\\g<b>{2}"); // OK
     rule.format  = boldFormat;
     highlightingRules.append(rule);
 
@@ -95,7 +96,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont listFont;
 
     listFont.setBold(true);
-    listFont.setPixelSize(20);
+    listFont.setPixelSize(standardPixelSize);
     listFormat.setFont(listFont);
 
     listFormat.setForeground(QColor::fromRgb(192, 63, 42));
@@ -110,7 +111,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont strikeFont;
 
     strikeFont.setBold(true);
-    strikeFont.setPixelSize(20);
+    strikeFont.setPixelSize(standardPixelSize);
     strikeFormat.setFont(strikeFont);
 
     strikeFormat.setForeground(Qt::darkBlue);
@@ -125,7 +126,7 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     QFont codeFont;
 
     codeFont.setItalic(true);
-    codeFont.setPixelSize(20);
+    codeFont.setPixelSize(standardPixelSize);
     codeLineFormat.setFont(codeFont);
 
     QColor codeBackground;
@@ -138,6 +139,17 @@ MarkdownHighlighter::MarkdownHighlighter(QObject* parent) : QSyntaxHighlighter(p
     rule.format  = codeLineFormat;
     highlightingRules.append(rule);
 
+
+    QFont linkFont;
+
+    linkFont.setPixelSize(standardPixelSize);
+    linkFormat.setFont(linkFont);
+
+    linkFormat.setForeground(Qt::darkGreen);
+
+    rule.pattern = QRegularExpression("!?\\[.+\\]\\(.+\\)");
+    rule.format  = linkFormat;
+    highlightingRules.append(rule);
 
     // MULTI LINES EXPRESSIONS
 
